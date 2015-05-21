@@ -6,9 +6,9 @@ module RailsConfig
     def keys()   marshal_dump.keys;   end
     def empty?() marshal_dump.empty?; end
 
-    def add_source!(source)
+    def add_source!(source, namespace=nil)
       # handle yaml file paths
-      source = (Sources::YAMLSource.new(source)) if source.is_a?(String)
+      source = (Sources::YAMLSource.new(source, namespace)) if source.is_a?(String)
 
       @config_sources ||= []
       @config_sources << source

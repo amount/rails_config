@@ -4,16 +4,21 @@ require 'erb'
 module RailsConfig
   module Sources
     class YAMLSource
-      attr_accessor :path
+      attr_accessor :path, :namespace
 
-      def initialize(path)
+      def initialize(path, namespace=nil)
         @path = path
+        @namespace = namespace
       end
 
       # returns a config hash from the YML file
       def load
-        if @path and File.exist?(@path.to_s)
+        if @path and File.exists?(@path.to_s)
           result = YAML.load(ERB.new(IO.read(@path.to_s)).result)
+          if self.namespace
+            namespaces = self.namespace.split("/")
+            result = namespaces.reverse.inject(result || {}) { |acc, space| { space => acc } }
+          end
         end
         result || {}
       rescue Psych::SyntaxError => e

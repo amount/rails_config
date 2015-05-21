@@ -40,6 +40,36 @@ module RailsConfig
     Kernel.const_set(RailsConfig.const_name, RailsConfig.load_files(files))
   end
 
+  def self.load_and_set_nested_settings(base_path, default_file_name, priority_file_name)
+    Kernel.send(:remove_const, RailsConfig.const_name) if Kernel.const_defined?(RailsConfig.const_name)
+      
+    config = Options.new
+
+    config.add_source!(File.join(base_path, default_file_name).to_s)
+    config.add_source!(File.join(base_path, priority_file_name).to_s)
+
+    folder_names = Dir.glob("#{base_path}/**/**").select {|f| File.directory? f}
+
+    folder_names.each do |folder_name| 
+      namespace_path = folder_name.to_s.sub("#{base_path.to_s}/", "")
+      namespaces = namespace_path.split("/")
+
+      namespaces.each_with_index do |namespace, i|
+        path = namespaces.first(i + 1).join("/")
+        namespaced_default_file = File.join(base_path, path, default_file_name).to_s
+        priority_default_file = File.join(base_path, path, priority_file_name).to_s
+
+        config.add_source!(namespaced_default_file.to_s, path)
+        config.add_source!(priority_default_file.to_s, path)
+      end
+    end
+
+    config.load!
+    config.load_env! if @@use_env
+
+    Kernel.const_set(RailsConfig.const_name, config)
+  end
+
   def self.setting_files(config_root, env)
     [
       File.join(config_root, "settings.yml").to_s,

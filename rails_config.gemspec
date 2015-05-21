@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rubocop",     "~> 0.31.0"
 
-  if ENV['RUBY_VERSION'] && ENV['RUBY_VERSION'] >= 'ruby-2.2'
+  if ENV['RUBY_VERSION'] && ENV['RUBY_VERSION'] >= 'ruby-2.2' then
     s.add_development_dependency "test-unit",   "~> 3.0"
   end
 

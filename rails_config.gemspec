@@ -37,9 +37,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rubocop",     "~> 0.31.0"
 
-  if ENV['RUBY_VERSION'] && ENV['RUBY_VERSION'] >= 'ruby-2.2' then
-    s.add_development_dependency "test-unit",   "~> 3.0"
-  end
+  # we are on 2.1  need to remember to change this 
+  #if ENV['RUBY_VERSION'] && ENV['RUBY_VERSION'] >= 'ruby-2.2' then
+  #  s.add_development_dependency "test-unit",   "~> 3.0"
+  #end
 
   if ENV['TRAVIS']
     s.add_development_dependency "codeclimate-test-reporter"

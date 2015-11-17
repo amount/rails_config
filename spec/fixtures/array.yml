@@ -1,0 +1,7 @@
+nested:
+  -
+    foo: 'bar'
+    baz: 'bux'
+  -
+    foo: 'qar'
+    baz: 'qux'

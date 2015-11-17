@@ -51,6 +51,11 @@ describe RailsConfig do
     expect(config[:section][:servers]).to be_kind_of(Array)
   end
 
+  it "should convert recursively" do
+    config = RailsConfig.load_files("#{fixture_path}/array.yml").to_hash
+    expect(config[:nested]).to eql [{foo: 'bar', baz: 'bux'}, {foo: 'qar', baz: 'qux'}]
+  end
+
   it "should convert to a json" do
     config = RailsConfig.load_files("#{fixture_path}/development.yml").to_json
     expect(JSON.parse(config)["section"]["servers"]).to be_kind_of(Array)

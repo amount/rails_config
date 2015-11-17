@@ -59,10 +59,28 @@ module RailsConfig
       reload!
     end
 
+    def descend_array(array)
+      array.length.times do |i|
+        value = array[i]
+        if value.instance_of? RailsConfig::Options
+          array[i] = value.to_hash
+        elsif value.instance_of? Array
+          array[i] = descend_array(value)
+        end
+      end
+      array
+    end
+
     def to_hash
       result = {}
       marshal_dump.each do |k, v|
-        result[k] = v.instance_of?(RailsConfig::Options) ? v.to_hash : v
+        if v.instance_of? RailsConfig::Options
+          result[k] = v.to_hash
+        elsif v.instance_of? Array
+          result[k] = descend_array(v)
+        else
+          result[k] = v
+        end
       end
       result
     end
